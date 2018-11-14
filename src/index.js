@@ -1,16 +1,22 @@
 const { incrementing } = wasm_bindgen;
 
-const init = () => {
-    console.log("hallU");
-
+const genImage = (fn, name) => {
     let canvas = document.getElementById('canvas');
     var ctx = canvas.getContext("2d");
 
-    console.log("before");
-    let data = incrementing();
-    console.log(data);
-    console.log("after");
+    console.log("gen image for: " + name);
+    let data = fn();
     ctx.putImageData(data, 0, 0);
 }
 
-wasm_bindgen('./psymagen_bg.wasm').then(init).catch(console.error);
+const init = () => {
+    console.log("init...");
+
+    document.getElementById('increment').addEventListener('click', function() {
+        genImage(incrementing, 'incrementing');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    wasm_bindgen('./psymagen_bg.wasm').then(init).catch(console.error);
+});
